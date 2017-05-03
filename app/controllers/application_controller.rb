@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   def current_user
     @current_user ||= User.find_by(id: session[:user_id])
     cookies.signed['user_id'] = @current_user&.id
+    @current_user
   end
 
   def current_user=(user)
