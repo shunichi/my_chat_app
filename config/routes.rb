@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  root to: 'rooms#show'
+  root to: 'home#index'
 
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get '/room', to: 'rooms#show'
+
+  get '/signin', to: 'sessions#new', as: :signin
+  get '/auth/:provider/callback', to: 'sessions#create'
+  delete '/signout', to: 'sessions#destroy', as: :signout
 end

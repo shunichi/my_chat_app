@@ -9,7 +9,7 @@ class RoomChannel < ApplicationCable::Channel
 
   def speak(data)
     if content = data['message'].presence
-      Message.create!(content: content)
+      current_user.messages.create!(content: content)
     end
   end
 end

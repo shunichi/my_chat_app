@@ -1,2 +1,4 @@
 .message
-  = simple_format message.content
+  = image_tag message.user.image_url, class: 'message__user-icon'
+  .message__content
+    = simple_format message.content
