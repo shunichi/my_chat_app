@@ -1517,7 +1517,7 @@ eventemitter3@1.x.x:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-1.2.0.tgz#1c86991d816ad1e504750e73874224ecf3bec508"
 
-events@^1.0.0:
+events@^1.0.0, events@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
@@ -3512,6 +3512,12 @@ react-dom@^15.5.4:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
     prop-types "~15.5.7"
+
+react-micro-container@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-micro-container/-/react-micro-container-1.1.0.tgz#a950fb3b21a46a1e3daf2bc673edaa6aae782a50"
+  dependencies:
+    events "^1.1.0"
 
 react@^15.5.4:
   version "15.5.4"

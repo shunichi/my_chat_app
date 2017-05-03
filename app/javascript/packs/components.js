@@ -1,4 +1,4 @@
 import WebpackerReact from 'webpacker-react';
-import MessagesApp from './components/messages_app';
+import MessagesAppContainer from './containers/messages_app';
 
-WebpackerReact.setup({ MessagesApp });
+WebpackerReact.setup({ MessagesAppContainer });

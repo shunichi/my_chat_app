@@ -1,12 +1,7 @@
--#= javascript_pack_tag 'hello_react'
 = javascript_pack_tag 'components'
 %h1 Chat room
 
--#= react_component 'Hello', name: current_user.name
-= react_component 'MessagesApp', messages: @messages.map(&:to_json)
-
--##messages
--#  = render @messages
+= react_component 'MessagesAppContainer', messages: @messages.map(&:to_json)
 
 %form
   %label Say something
