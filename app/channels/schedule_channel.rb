@@ -10,7 +10,7 @@ class ScheduleChannel < ApplicationCable::Channel
   def update_event(data)
     event_params = data['event'];
     if schedule_event = ScheduleEvent.find_by(id: event_params['id'])
-      schedule_event.update!(begin_at: event_params['begin_at'], column_index: event_params['column_index'])
+      schedule_event.update!(event_params.slice('begin_at', 'end_at', 'column_index'))
     end
   end
 end

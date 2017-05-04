@@ -1,0 +1,11 @@
+%h1 Schedules
+
+= form_for ScheduleEvent.new(begin_at: Time.current.change(hour: 8), end_at: Time.current.change(hour: 9), column_index: 1), remote: true do |f|
+  = f.hidden_field :begin_at
+  = f.hidden_field :end_at
+  = f.hidden_field :column_index
+  = f.text_field :name
+  = button_tag '作成'
+
+= react_component('ScheduleTableContainer', columnSize: 5, events: @schedule_events.map(&:to_h), tableBeginAt: '8:00')
+

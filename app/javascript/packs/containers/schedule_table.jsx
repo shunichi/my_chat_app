@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import MicroContainer from 'react-micro-container';
 import ScheduleTable from '../components/schedules/schedule_table';
 import moment from 'moment';
+import humps from 'humps';
 
 export default class ScheduleTableContainer extends MicroContainer {
   constructor(props) {
@@ -16,11 +17,11 @@ export default class ScheduleTableContainer extends MicroContainer {
         connected: () => {},
         disconnected: () => {},
         received: (data) => {
-          this.updateEvent(data['event']);
+          this.updateEvent(this.momentize(humps.camelizeKeys(data['event'])));
         },
-        update_event: function (event) {
-          const eventData = { id: event.id, begin_at: event.beginAt, column_index: event.columnIndex };
-          return this.perform('update_event', {event: eventData});
+        updateEvent: function (event) {
+          const eventData = Object.assign({}, event, {beginAt: event.beginAt.format(), endAt: event.endAt.format()})
+          return this.perform('update_event', {event: humps.decamelizeKeys(eventData)});
         },
       });
     }
@@ -32,28 +33,34 @@ export default class ScheduleTableContainer extends MicroContainer {
     });
   }
 
-  updateEvent({id, beginAt, columnIndex}) {
+  updateEvent(newEvent) {
+    var found = false;
     const newEvents = this.state.events.map((event) => {
-      if (event.id === id) {
-        return this.modifyEvent(event, moment(beginAt), columnIndex);
+      if (event.id === newEvent.id) {
+        found = true;
+        return newEvent;
       } else {
         return event;
       }
     });
+    if (!found) {
+      newEvents.push(newEvent);
+    }
     this.setState({
       events: newEvents,
     });
   }
 
-  handleDropEvent(event) {
-    this.updateEvent(event);
-    App.schedule.update_event(event);
+  findEvent(id) {
+    return this.state.events.find(event => event.id == id);
   }
 
-  modifyEvent (event, beginAt, columnIndex) {
-    const durationMinutes = event.endAt.diff(event.beginAt, 'minutes');
-    const newEndAt = moment(beginAt).add(durationMinutes, 'minutes');
-    return Object.assign({}, event, {columnIndex, beginAt, endAt: newEndAt});
+  handleDropEvent({ id, beginAt, columnIndex }) {
+    const targetEvent = this.findEvent(id);
+    const duration = targetEvent.endAt.diff(targetEvent.beginAt, 'minutes');
+    const newEvent = Object.assign({}, targetEvent, { beginAt, endAt: moment(beginAt).add(duration, 'minutes'), columnIndex })
+    this.updateEvent(newEvent);
+    App.schedule.updateEvent(newEvent);
   }
 
   momentize(event) {

@@ -8,16 +8,11 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 class ScheduleTable extends React.Component {
-
-  momentize(event) {
-    return Object.assign({}, event, {beginAt: moment(event.beginAt), endAt: moment(event.endAt)});
-  };
-
-  buildCell(columIndex, rowIndex) {
+  buildCell(columnIndex, rowIndex) {
     return (<ScheduleTableCell
       key={rowIndex}
       beginAt={moment(this.props.tableBeginAt).add(rowIndex, 'hours')}
-      columnIndex={columIndex}
+      columnIndex={columnIndex}
       dispatch={this.props.dispatch}
     />);
   }
@@ -35,10 +30,13 @@ class ScheduleTable extends React.Component {
     });
 
     return (
-      <table className="schedule-table">
-        <thead><tr className="schedule-table__header">{headers}</tr></thead>
-        <tbody><tr className="schedule-table__row">{columns}</tr></tbody>
-      </table>
+      <div>
+        <h2>{this.props.tableBeginAt.format('YYYY/MM/DD')}</h2>
+        <table className="schedule-table">
+          <thead><tr className="schedule-table__header">{headers}</tr></thead>
+          <tbody><tr className="schedule-table__row">{columns}</tr></tbody>
+        </table>
+      </div>
     );
   }
 }
