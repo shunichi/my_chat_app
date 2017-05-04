@@ -15,9 +15,20 @@
   border: 1px solid #ccc
 
 .schedule-table__cell
+  position: relative
   height: 60px
   &:not(:last-child)
     border-bottom: 1px solid #ccc
+
+.schedule-table__cell-drop-target
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  opacity: 0.5
+  z-index: 1
+  background: #ccf
 
 .schedule-event
   position: absolute
