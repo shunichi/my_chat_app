@@ -26,7 +26,7 @@ export default class ScheduleTableContainer extends MicroContainer {
           }
         },
         updateEvent: function (event) {
-          const eventData = Object.assign({}, event, {beginAt: event.beginAt.format(), endAt: event.endAt.format()})
+          const eventData = Object.assign({}, event, {beginAt: event.beginAt.format(), endAt: event.endAt.format()});
           return this.perform('update_event', {event: humps.decamelizeKeys(eventData)});
         },
       });
@@ -41,7 +41,7 @@ export default class ScheduleTableContainer extends MicroContainer {
   }
 
   updateEvent(newEvent) {
-    var found = false;
+    let found = false;
     const newEvents = this.state.events.map((event) => {
       if (event.id === newEvent.id) {
         found = true;
@@ -62,13 +62,13 @@ export default class ScheduleTableContainer extends MicroContainer {
   }
 
   findEvent(id) {
-    return this.state.events.find(event => event.id == id);
+    return this.state.events.find(event => event.id === id);
   }
 
   handleDropEvent({ id, beginAt, columnIndex }) {
     const targetEvent = this.findEvent(id);
     const duration = targetEvent.endAt.diff(targetEvent.beginAt, 'minutes');
-    const newEvent = Object.assign({}, targetEvent, { beginAt, endAt: moment(beginAt).add(duration, 'minutes'), columnIndex })
+    const newEvent = Object.assign({}, targetEvent, { beginAt, endAt: moment(beginAt).add(duration, 'minutes'), columnIndex });
     this.updateEvent(newEvent);
     App.schedule.updateEvent(newEvent);
   }
