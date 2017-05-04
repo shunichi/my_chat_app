@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170503134050) do
+ActiveRecord::Schema.define(version: 20170504052826) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,15 @@ ActiveRecord::Schema.define(version: 20170503134050) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "schedule_events", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "begin_at", null: false
+    t.datetime "end_at", null: false
+    t.integer "column_index", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

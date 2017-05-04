@@ -1,0 +1,35 @@
+.schedule-table
+  table-layout: fixed
+  border-collapse: collapse
+
+.schedule-table__th
+  width: 100px
+  padding: 8px
+  vertical-align: middle
+  border: 1px solid #ccc
+
+.schedule-table__cells
+  position: relative
+  overflow: hidden
+  padding: 0
+  border: 1px solid #ccc
+
+.schedule-table__cell
+  height: 60px
+  &:not(:last-child)
+    border-bottom: 1px solid #ccc
+
+.schedule-event
+  position: absolute
+  overflolw: hidden
+  background: #ada
+  border: 1px solid #8a8
+  padding: 4px
+
+.schedule-event__time
+  font-size: 10px
+
+.schedule-event__name
+  font-size: 12px
+  font-weight: bold
+
