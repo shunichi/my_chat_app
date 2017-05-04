@@ -1,7 +1,7 @@
 class ScheduleBroadcastJob < ApplicationJob
   queue_as :default
 
-  def perform(schedule_event)
-    ActionCable.server.broadcast 'schedule_channel', event: schedule_event.to_h
+  def perform(action, schedule_event_params)
+    ActionCable.server.broadcast 'schedule_channel', action: action, event: schedule_event_params
   end
 end

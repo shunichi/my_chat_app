@@ -24,7 +24,7 @@ class ScheduleTable extends React.Component {
     const columns = _.range(columnSize).map(columnIndex => {
       const rows = _.range(rowSize).map(rowIndex => this.buildCell(columnIndex, rowIndex));
       const eventComponents = this.props.events.filter(event => event.columnIndex === columnIndex).map((event) => {
-          return (<ScheduleEvent key={event.id} tableBeginAt={this.props.tableBeginAt} event={event} />);
+          return (<ScheduleEvent key={event.id} dispatch={this.props.dispatch} tableBeginAt={this.props.tableBeginAt} event={event} />);
       });
       return (<td key={columnIndex} className="schedule-table__cells">{rows}{eventComponents}</td>);
     });
@@ -42,6 +42,7 @@ class ScheduleTable extends React.Component {
 }
 
 ScheduleTable.propTypes = {
+  authenticityToken: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
   columnSize: PropTypes.number.isRequired,
   tableBeginAt: PropTypes.object.isRequired,

@@ -13,7 +13,11 @@ class ScheduleEvent < ApplicationRecord
 
   after_commit :enqueue_job
   def enqueue_job
-    ScheduleBroadcastJob.perform_later self if self.persisted?
+    if self.persisted?
+      ScheduleBroadcastJob.perform_later 'update', self.to_h
+    else
+      ScheduleBroadcastJob.perform_later 'destroy', {id: self.id}
+    end
   end
 
   def self.create_dummies

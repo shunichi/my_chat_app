@@ -4,6 +4,7 @@ import MicroContainer from 'react-micro-container';
 import ScheduleTable from '../components/schedules/schedule_table';
 import moment from 'moment';
 import humps from 'humps';
+import $ from 'jquery';
 
 export default class ScheduleTableContainer extends MicroContainer {
   constructor(props) {
@@ -17,7 +18,12 @@ export default class ScheduleTableContainer extends MicroContainer {
         connected: () => {},
         disconnected: () => {},
         received: (data) => {
-          this.updateEvent(this.momentize(humps.camelizeKeys(data['event'])));
+          const action = data.action;
+          if (action === 'update') {
+            this.updateEvent(this.momentize(humps.camelizeKeys(data.event)));
+          } else if (action === 'destroy') {
+            this.destroyEvent(data.event.id);
+          }
         },
         updateEvent: function (event) {
           const eventData = Object.assign({}, event, {beginAt: event.beginAt.format(), endAt: event.endAt.format()})
@@ -30,6 +36,7 @@ export default class ScheduleTableContainer extends MicroContainer {
   componentDidMount() {
     this.subscribe({
       dropEvent: this.handleDropEvent,
+      destroyEvent: this.handleDestroyEvent,
     });
   }
 
@@ -46,9 +53,12 @@ export default class ScheduleTableContainer extends MicroContainer {
     if (!found) {
       newEvents.push(newEvent);
     }
-    this.setState({
-      events: newEvents,
-    });
+    this.setState({ events: newEvents });
+  }
+
+  destroyEvent(id) {
+    const newEvents = this.state.events.filter(event => event.id !== id);
+    this.setState({ events: newEvents });
   }
 
   findEvent(id) {
@@ -63,16 +73,36 @@ export default class ScheduleTableContainer extends MicroContainer {
     App.schedule.updateEvent(newEvent);
   }
 
+  handleDestroyEvent(id) {
+    $.ajax({
+      url: `/schedule_events/${id}`,
+      method: 'DELETE',
+      data: {
+        authenticity_token: this.props.authenticityToken
+      },
+    });
+    
+    // いろいろ試したけど fetch ではうまく動かせなかった
+    // const formData = new FormData();
+    // const headers = new Headers();
+    // formData.append('authenticity_token', this.props.authenticityToken);
+    // formData.append('_method', 'delete');
+    // // headers.append('X-CSRF-Token', this.props.authenticityToken);
+    // headers.append("Content-Type", "application/x-www-form-urlencoded");
+    // fetch(`/schedule_events/${id}`, {method: 'POST', headers: headers, body: formData});
+  }
+
   momentize(event) {
     return Object.assign({}, event, {beginAt: moment(event.beginAt), endAt: moment(event.endAt)});
   };
 
   render() {
-    return (<ScheduleTable columnSize={this.props.columnSize} tableBeginAt={moment(this.props.tableBeginAt, 'HH:mm')} events={this.state.events} dispatch={this.dispatch}/>);
+    return (<ScheduleTable columnSize={this.props.columnSize} tableBeginAt={moment(this.props.tableBeginAt, 'HH:mm')} events={this.state.events} authenticityToken={this.props.authenticityToken} dispatch={this.dispatch}/>);
   }
 }
 
 ScheduleTableContainer.propTypes = {
+  authenticityToken: PropTypes.string.isRequired,
   columnSize: PropTypes.number.isRequired,
   tableBeginAt: PropTypes.string.isRequired,
   events: PropTypes.array.isRequired,

@@ -19,6 +19,11 @@ function collect(connect, monitor) {
 }
 
 class ScheduleEvent extends React.Component {
+
+  onClickDestroy() {
+    this.props.dispatch('destroyEvent', this.props.event.id);
+  }
+
   render() {
     const { name, beginAt, endAt } = this.props.event;
     const timeFormat = 'h:mm';
@@ -39,12 +44,14 @@ class ScheduleEvent extends React.Component {
         <div className="schedule-event__name">
           {name}
         </div>
+        <div className="schedule-event__destroy" onClick={this.onClickDestroy.bind(this)}>&times;</div>
       </div>
     );
   }
 }
 
 ScheduleEvent.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   tableBeginAt: PropTypes.object.isRequired,
   event: PropTypes.shape({
     id: PropTypes.number.isRequired,

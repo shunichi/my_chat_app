@@ -7,5 +7,5 @@
   = f.text_field :name
   = button_tag '作成'
 
-= react_component('ScheduleTableContainer', columnSize: 5, events: @schedule_events.map(&:to_h), tableBeginAt: '8:00')
+= react_component('ScheduleTableContainer', columnSize: 5, events: @schedule_events.map(&:to_h), tableBeginAt: '8:00', authenticityToken: form_authenticity_token)
 
