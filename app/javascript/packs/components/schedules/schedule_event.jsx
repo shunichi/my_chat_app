@@ -26,7 +26,7 @@ class ScheduleEvent extends React.Component {
 
   render() {
     const { name, beginAt, endAt } = this.props.event;
-    const timeFormat = 'h:mm';
+    const timeFormat = 'H:mm';
     const timeRange = `${beginAt.format(timeFormat)}〜${endAt.format(timeFormat)}`;
     const { connectDragSource, isDragging } = this.props;
     const style = {
