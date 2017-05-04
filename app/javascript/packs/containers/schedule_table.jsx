@@ -10,16 +10,32 @@ export default class ScheduleTableContainer extends MicroContainer {
     this.state = { events: this.props.events.map(event => this.momentize(event)) };
   }
 
+  componentWillMount() {
+    if (typeof App !== 'undefined') {
+      App.schedule = App.cable.subscriptions.create("ScheduleChannel", {
+        connected: () => {},
+        disconnected: () => {},
+        received: (data) => {
+          this.updateEvent(data['event']);
+        },
+        update_event: function (event) {
+          const eventData = { id: event.id, begin_at: event.beginAt, column_index: event.columnIndex };
+          return this.perform('update_event', {event: eventData});
+        },
+      });
+    }
+  }
+
   componentDidMount() {
     this.subscribe({
       dropEvent: this.handleDropEvent,
     });
   }
 
-  handleDropEvent({id, beginAt, columnIndex}) {
+  updateEvent({id, beginAt, columnIndex}) {
     const newEvents = this.state.events.map((event) => {
       if (event.id === id) {
-        return this.modifyEvent(event, beginAt, columnIndex);
+        return this.modifyEvent(event, moment(beginAt), columnIndex);
       } else {
         return event;
       }
@@ -27,6 +43,11 @@ export default class ScheduleTableContainer extends MicroContainer {
     this.setState({
       events: newEvents,
     });
+  }
+
+  handleDropEvent(event) {
+    this.updateEvent(event);
+    App.schedule.update_event(event);
   }
 
   modifyEvent (event, beginAt, columnIndex) {

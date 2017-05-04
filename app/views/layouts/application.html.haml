@@ -12,6 +12,10 @@
     %header
       - if user_signed_in?
         = link_to 'Log out', signout_path, method: :delete
+        = link_to 'room', room_path
+        = link_to 'schedules', schedules_path
       - else
         = link_to 'Log in', signin_path
+
+
     = yield

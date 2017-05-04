@@ -11,6 +11,11 @@ class ScheduleEvent < ApplicationRecord
     }
   end
 
+  after_commit :enqueue_job
+  def enqueue_job
+    ScheduleBroadcastJob.perform_later self if self.persisted?
+  end
+
   def self.create_dummies
     t = Time.current.change(hour: 8)
     %w(red black yellow blue green).each_with_index do |name, index|
